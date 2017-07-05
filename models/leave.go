@@ -12,6 +12,7 @@ type Leave struct {
 	Status       string    `json:"status" yaml:"status"`
 	DepartmentID string    `json:"department_id" yaml:"department_id"`
 	UserName     string    `json:"user_name" yaml:"user_name"`
+	Type         int       `json:"type" yaml:"type"`
 }
 
 //ExposedLeave is used to return the leave for listing APIs
