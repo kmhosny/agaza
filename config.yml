@@ -1,0 +1,8 @@
+development:
+  dbnumber: 0
+  redisprotocol: tcp
+  redishost: localhost
+  redisport: 6379
+  redispoolsize: 5
+  APIserverport: 8080
+

@@ -1,0 +1,12 @@
+TRACE: 2017/07/05 14:08:30 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/05 14:13:06 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/05 14:15:03 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/05 14:16:17 middleware.go:11: GET: http://localhost:8080/api/ 2017-07-05 14:16:17.143870819 +0200 EET  
+TRACE: 2017/07/05 14:17:00 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/05 14:17:05 middleware.go:11: GET: http://localhost:8080/api/ 2017-07-05 14:17:05.885946384 +0200 EET  
+TRACE: 2017/07/05 14:17:11 middleware.go:11: GET: http://localhost:8080/api/ 2017-07-05 14:17:11.171980034 +0200 EET  
+TRACE: 2017/07/05 14:17:40 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/05 14:17:53 middleware.go:11: GET: http://localhost:8080/api/ 2017-07-05 14:17:53.676104962 +0200 EET  
+TRACE: 2017/07/05 14:20:03 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/05 14:31:25 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/05 14:31:28 middleware.go:11: GET: http://localhost:8080/api/ 2017-07-05 14:31:28.651096809 +0200 EET  
