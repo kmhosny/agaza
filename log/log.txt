@@ -13,3 +13,52 @@ TRACE: 2017/07/05 14:31:28 middleware.go:11: GET: http://localhost:8080/api/ 201
 TRACE: 2017/07/06 14:18:05 main.go:14: Server Started on http://localhost: 8080
 TRACE: 2017/07/06 14:18:28 middleware.go:11: GET: http://localhost:8080/api/departments 2017-07-06 14:18:28.05166731 +0200 EET  
 TRACE: 2017/07/06 14:18:52 middleware.go:11: GET: http://localhost:8080/api/agazatypes 2017-07-06 14:18:52.024764122 +0200 EET  
+TRACE: 2017/07/06 16:36:41 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/06 16:37:16 middleware.go:11: POST: http://82140d70.ngrok.io/api/leaves 2017-07-06 16:37:16.879865899 +0200 EET  from=2017-Jul-07&to=2017-Jul-07&user_id=1&reason=keda&department_id=1&type=1
+TRACE: 2017/07/06 16:37:16 api_paths.go:140: 1
+TRACE: 2017/07/06 16:37:16 redis_connection_setters.go:47: 14 14 agaza:user:1
+TRACE: 2017/07/06 16:37:16 redis_connection_setters.go:57: 1
+TRACE: 2017/07/06 16:37:16 redis_connection_setters.go:112: 1
+TRACE: 2017/07/06 16:37:16 redis_connection_setters.go:141: 13
+TRACE: 2017/07/06 16:37:22 middleware.go:11: GET: http://82140d70.ngrok.io/api/leaves?from=2017-Jul-01&to=2017-Jul-07 2017-07-06 16:37:22.859087322 +0200 EET from=2017-Jul-01&to=2017-Jul-07 
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:137: agaza:day:2017-07-01
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:137: agaza:day:2017-07-02
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:137: agaza:day:2017-07-03
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:137: agaza:day:2017-07-04
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:137: agaza:day:2017-07-05
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:144: [agaza:leave:20]
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:137: agaza:day:2017-07-06
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:137: agaza:day:2017-07-07
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:144: [agaza:leave:21]
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:174: 2017-07-07 00:00:00 +0000 UTC <nil>
+TRACE: 2017/07/06 16:37:22 redis_connection_getters.go:174: 2017-07-07 00:00:00 +0000 UTC <nil>
+TRACE: 2017/07/06 16:37:22 api_paths.go:119: [{"id":"20","user_id":"","department_id":"1","user_name":"Hassan","from":"2017-Jul-07","to":"2017-Jul-07"},{"id":"21","user_id":"","department_id":"1","user_name":"Hassan","from":"2017-Jul-07","to":"2017-Jul-07"}]
+TRACE: 2017/07/06 16:38:00 middleware.go:11: POST: http://82140d70.ngrok.io/api/leaves 2017-07-06 16:38:00.029105605 +0200 EET  from=2017-Jan-04&to=2017-Jan-07&user_id=1&reason=keda&department_id=1&type=1
+TRACE: 2017/07/06 16:38:00 api_paths.go:140: 1
+TRACE: 2017/07/06 16:38:00 redis_connection_setters.go:47: 13 13 agaza:user:1
+TRACE: 2017/07/06 16:38:00 redis_connection_setters.go:57: 4
+TRACE: 2017/07/06 16:38:00 redis_connection_setters.go:112: 1
+TRACE: 2017/07/06 16:38:00 redis_connection_setters.go:141: 9
+TRACE: 2017/07/06 16:38:06 middleware.go:11: GET: http://82140d70.ngrok.io/api/leaves?from=2017-Jul-01&to=2017-Jul-07 2017-07-06 16:38:06.378328037 +0200 EET from=2017-Jul-01&to=2017-Jul-07 
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:137: agaza:day:2017-07-01
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:137: agaza:day:2017-07-02
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:137: agaza:day:2017-07-03
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:137: agaza:day:2017-07-04
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:137: agaza:day:2017-07-05
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:144: [agaza:leave:20]
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:137: agaza:day:2017-07-06
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:144: []
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:137: agaza:day:2017-07-07
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:144: [agaza:leave:21]
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:174: 2017-07-07 00:00:00 +0000 UTC <nil>
+TRACE: 2017/07/06 16:38:06 redis_connection_getters.go:174: 2017-07-07 00:00:00 +0000 UTC <nil>
+TRACE: 2017/07/06 16:38:06 api_paths.go:119: [{"id":"20","user_id":"","department_id":"1","user_name":"Hassan","from":"2017-Jul-07","to":"2017-Jul-07"},{"id":"21","user_id":"","department_id":"1","user_name":"Hassan","from":"2017-Jul-07","to":"2017-Jul-07"}]

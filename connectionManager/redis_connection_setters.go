@@ -97,6 +97,7 @@ func (r *RedisConnection) EditLeave(l *models.Leave) (string, error) {
 	return r.createUpdateLeave(l, l.ID, days, userName, remainingLeaves, conn)
 }
 
+//TODO: bug, it inserts the same date in the from to date fields
 func (r *RedisConnection) createUpdateLeave(l *models.Leave, newLeaveID string, days int, userName string, remainingLeaves int, conn *redis.Client) (string, error) {
 
 	if ok, err1 := conn.Cmd("MULTI").Str(); strings.ToLower(ok) != "ok" {
