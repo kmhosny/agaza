@@ -10,3 +10,6 @@ TRACE: 2017/07/05 14:17:53 middleware.go:11: GET: http://localhost:8080/api/ 201
 TRACE: 2017/07/05 14:20:03 main.go:14: Server Started on http://localhost: 8080
 TRACE: 2017/07/05 14:31:25 main.go:14: Server Started on http://localhost: 8080
 TRACE: 2017/07/05 14:31:28 middleware.go:11: GET: http://localhost:8080/api/ 2017-07-05 14:31:28.651096809 +0200 EET  
+TRACE: 2017/07/06 14:18:05 main.go:14: Server Started on http://localhost: 8080
+TRACE: 2017/07/06 14:18:28 middleware.go:11: GET: http://localhost:8080/api/departments 2017-07-06 14:18:28.05166731 +0200 EET  
+TRACE: 2017/07/06 14:18:52 middleware.go:11: GET: http://localhost:8080/api/agazatypes 2017-07-06 14:18:52.024764122 +0200 EET  

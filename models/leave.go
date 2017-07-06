@@ -4,7 +4,7 @@ import "time"
 
 //Leave structure defining the leave taken by users, it contains, ID, userID, Reason, from and to
 type Leave struct {
-	ID           string    `json:"ID"    yaml:"ID"`
+	ID           string    `json:"id"    yaml:"id"`
 	UserID       string    `json:"user_id"     yaml:"user_id"`
 	Reason       string    `json:"reason" yaml:"reason"`
 	From         time.Time `json:"from" yaml:"from"`
@@ -17,7 +17,7 @@ type Leave struct {
 
 //ExposedLeave is used to return the leave for listing APIs
 type ExposedLeave struct {
-	ID           string    `json:"ID"    yaml:"ID"`
+	ID           string    `json:"id"    yaml:"id"`
 	UserID       string    `json:"user_id"     yaml:"user_id"`
 	From         time.Time `json:"from" yaml:"from"`
 	To           time.Time `json:"to" yaml:"to"`
