@@ -3,8 +3,11 @@ package connectionManager
 import (
 	"agaza/logger"
 	"agaza/models"
+	"errors"
 	"strings"
 	"time"
+
+	"github.com/mediocregopher/radix.v2/redis"
 )
 
 const queuedKeyword = "queued"
@@ -30,6 +33,24 @@ func (r *RedisConnection) NewLeave(l *models.Leave) (int, error) {
 		logger.Error.Println("Failed to incremenet number of leaves")
 		return -1, errIncr
 	}
+
+	remainingLeaves, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userID).Int()
+	if err != nil {
+		logger.Error.Println("Failed to get remaining leaves")
+		return -1, err
+	}
+
+	days := int((l.To.Sub(l.From) / 24).Hours()) + 1
+
+	if remainingLeaves-days < 0 {
+		logger.Error.Println("Failed to get remaining leaves")
+		return -1, errors.New("Your remaining leaves are less than days requested")
+	}
+
+	return r.createUpdateLeave(l, newLeaveID, days, remainingLeaves, conn)
+}
+
+func (r *RedisConnection) createUpdateLeave(l *models.Leave, newLeaveID string, days int, remainingLeaves int, conn *redis.Client) (int, error) {
 
 	if ok, err1 := conn.Cmd("MULTI").Str(); strings.ToLower(ok) != "ok" {
 		logger.Error.Println("Cannot execute commands now")
@@ -67,15 +88,9 @@ func (r *RedisConnection) NewLeave(l *models.Leave) (int, error) {
 		return -1, result.Err
 	}
 
-	remainingLeaves, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userRemainingAnnualLeaves).Int()
-	if err != nil {
-		logger.Error.Println("Failed to get remaning leaves of user", userKeyPrefix+l.UserID)
-		return -1, err
-	}
+	remainingLeaves = remainingLeaves - days
 
-	remainingLeaves = remainingLeaves - 1
-
-	_, err = conn.Cmd("HSET", userKeyPrefix+l.UserID, userRemainingAnnualLeaves, remainingLeaves).Int()
+	_, err := conn.Cmd("HSET", userKeyPrefix+l.UserID, userRemainingAnnualLeaves, remainingLeaves).Int()
 	if err != nil {
 		logger.Error.Println("Failed to set remaning leaves of user", userKeyPrefix+l.UserID)
 		return -1, err
