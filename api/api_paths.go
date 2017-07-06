@@ -70,16 +70,16 @@ func (f *FasthttpAPIHandler) GetAgazaTypes(c *routing.Context) error {
 func (f *FasthttpAPIHandler) GetDepartments(c *routing.Context) error {
 	deps := [3]models.Department{}
 	deps[0].ID = "1"
-	deps[0].DepartmentColor = "Ninjas"
-	deps[0].DepartmentName = "#ff7441"
+	deps[0].Color = "Ninjas"
+	deps[0].Name = "#ff7441"
 
-	deps[1].ID = "1"
-	deps[1].DepartmentColor = "Mobile"
-	deps[1].DepartmentName = "#0db1bd"
+	deps[1].ID = "2"
+	deps[1].Color = "Mobile"
+	deps[1].Name = "#0db1bd"
 
-	deps[2].ID = "1"
-	deps[2].DepartmentColor = "zumba"
-	deps[2].DepartmentName = "#bf46bd"
+	deps[2].ID = "3"
+	deps[2].Color = "zumba"
+	deps[2].Name = "#bf46bd"
 
 	response, _ := json.Marshal(deps)
 	c.Write(response)
