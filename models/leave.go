@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 //Leave structure defining the leave taken by users, it contains, ID, userID, Reason, from and to
 type Leave struct {
@@ -23,4 +26,32 @@ type ExposedLeave struct {
 	To           time.Time `json:"to" yaml:"to"`
 	DepartmentID string    `json:"department_id" yaml:"department_id"`
 	UserName     string    `json:"user_name" yaml:"user_name"`
+}
+
+//MarshalJSON custom marshall
+func (l *Leave) MarshalJSON() ([]byte, error) {
+	type Alias Leave
+	return json.Marshal(&struct {
+		*Alias
+		From string `json:"from"`
+		To   string `json:"to"`
+	}{
+		Alias: (*Alias)(l),
+		From:  l.From.Format("2006-Jan-01"),
+		To:    l.To.Format("2006-Jan-01"),
+	})
+}
+
+//MarshalJSON custom marshall
+func (l *ExposedLeave) MarshalJSON() ([]byte, error) {
+	type Alias ExposedLeave
+	return json.Marshal(&struct {
+		*Alias
+		From string `json:"from"`
+		To   string `json:"to"`
+	}{
+		Alias: (*Alias)(l),
+		From:  l.From.Format("2006-Jan-01"),
+		To:    l.To.Format("2006-Jan-01"),
+	})
 }

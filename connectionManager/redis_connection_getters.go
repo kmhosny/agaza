@@ -134,18 +134,22 @@ func (r *RedisConnection) GetLeavesInRange(from time.Time, to time.Time) ([]*mod
 	for d := from; d.Before(to) || d == to; d = d.Add(time.Duration(24) * time.Hour) {
 		datePart := strings.TrimSuffix(d.String(), " 00:00:00 +0000 UTC")
 
+		logger.Trace.Println(daySortedSetPrefix + datePart)
+
 		result, err := conn.Cmd("ZRANGE", daySortedSetPrefix+datePart, 0, -1).List()
 		if err != nil {
 			logger.Error.Println("Error Queuing command ZRANGE", daySortedSetPrefix+datePart, 0, -1)
 			return nil, err
 		}
+		logger.Trace.Println(result)
+
 		for _, v := range result {
 			leaveIds = append(leaveIds, v)
 		}
 	}
 	leaves := make([]*models.ExposedLeave, 0)
 	for _, dayLeaveID := range leaveIds {
-		result, err := conn.Cmd("HGETALL", dayLeaveID, 0, -1).List()
+		result, err := conn.Cmd("HGETALL", dayLeaveID).List()
 		if err != nil {
 			logger.Error.Println("Failed execute command HGETALL", dayLeaveID)
 			return nil, err
@@ -164,13 +168,16 @@ func (r *RedisConnection) GetLeavesInRange(from time.Time, to time.Time) ([]*mod
 				leaveObject.DepartmentID = result[i+1]
 				break
 			case leaveFrom:
+				trimmedDate := strings.TrimSuffix(result[i+1], " 00:00:00 +0000 UTC")
 				const shortForm = "2006-Jan-02"
-				t, _ := time.Parse(shortForm, result[i+1])
+				t, err := time.Parse(shortForm, trimmedDate)
+				logger.Trace.Println(t, err)
 				leaveObject.From = t
 				break
 			case leaveTo:
+				trimmedDate := strings.TrimSuffix(result[i+1], " 00:00:00 +0000 UTC")
 				const shortForm = "2006-Jan-02"
-				t, _ := time.Parse(shortForm, result[i+1])
+				t, _ := time.Parse(shortForm, trimmedDate)
 				leaveObject.To = t
 				break
 			case leaveUserName:

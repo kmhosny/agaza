@@ -57,9 +57,9 @@ func (f *FasthttpAPIHandler) GetRoot(c *routing.Context) error {
 
 //GetAgazaTypes get all agaza types
 func (f *FasthttpAPIHandler) GetAgazaTypes(c *routing.Context) error {
-	agaza := new(models.AgazaType)
-	agaza.ID = "1"
-	agaza.Name = "annual"
+	agaza := [1]models.AgazaType{}
+	agaza[0].ID = "1"
+	agaza[0].Name = "annual"
 	response, _ := json.Marshal(agaza)
 	c.Write(response)
 	c.SetStatusCode(http.StatusOK)
@@ -116,6 +116,7 @@ func (f *FasthttpAPIHandler) GetLeaves(c *routing.Context) error {
 			return err
 		}
 		response, err := json.Marshal(leaves)
+		logger.Trace.Println(string(response))
 		if err != nil {
 			logger.Error.Println("Failed to marshal leaves")
 			c.SetStatusCode(http.StatusInternalServerError)
@@ -135,16 +136,17 @@ func (f *FasthttpAPIHandler) PostLeaves(c *routing.Context) error {
 	userID := string(c.PostArgs().Peek("user_id"))
 	reason := string(c.PostArgs().Peek("reason"))
 	leaveType := string(c.PostArgs().Peek("type"))
-	departmentID := string(c.PostArgs().Peek("departmentID"))
-
-	from, err := time.Parse(shortForm, string(c.QueryArgs().Peek("from")))
-	if err != nil && string(c.QueryArgs().Peek("from")) != "" {
+	departmentID := string(c.PostArgs().Peek("department_id"))
+	logger.Trace.Println(departmentID)
+	from, err := time.Parse(shortForm, string(c.PostArgs().Peek("from")))
+	if err != nil && string(c.PostArgs().Peek("from")) != "" {
 		logger.Error.Println("date must be in format 2017-Jun-05")
 		c.SetStatusCode(http.StatusBadRequest)
 		return errors.New("date must be in format 2017-Jun-05")
 	}
-	to, err := time.Parse(shortForm, string(c.QueryArgs().Peek("to")))
-	if err != nil && string(c.QueryArgs().Peek("to")) != "" {
+
+	to, err := time.Parse(shortForm, string(c.PostArgs().Peek("to")))
+	if err != nil && string(c.PostArgs().Peek("to")) != "" {
 		logger.Error.Println("date must be in format 2017-Jun-05")
 		c.SetStatusCode(http.StatusBadRequest)
 		return errors.New("date must be in format 2017-Jun-05")

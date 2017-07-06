@@ -4,6 +4,7 @@ import (
 	"agaza/logger"
 	"agaza/models"
 	"errors"
+	"strconv"
 	"strings"
 	"time"
 
@@ -28,17 +29,22 @@ func (r *RedisConnection) NewLeave(l *models.Leave) (string, error) {
 	}
 	defer r.PutBackConnection(conn)
 
-	newLeaveID, errIncr := conn.Cmd("INCR", leaveIDCounterPrefix).Str()
+	strID, errIncr := conn.Cmd("INCR", leaveIDCounterPrefix).Int()
+	newLeaveID := strconv.Itoa(strID)
 	if errIncr != nil {
 		logger.Error.Println("Failed to incremenet number of leaves")
 		return "-1", errIncr
 	}
 
-	remainingLeaves, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userID).Int()
+	remainStr, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userRemainingAnnualLeaves).Str()
 	if err != nil {
 		logger.Error.Println("Failed to get remaining leaves")
 		return "-1", err
 	}
+
+	remainingLeaves, _ := strconv.Atoi(remainStr)
+
+	logger.Trace.Println(remainingLeaves, remainStr, userKeyPrefix+l.UserID)
 
 	userName, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userName).Str()
 	if err != nil {
@@ -48,6 +54,7 @@ func (r *RedisConnection) NewLeave(l *models.Leave) (string, error) {
 
 	days := int((l.To.Sub(l.From) / 24).Hours()) + 1
 
+	logger.Trace.Println(days)
 	if remainingLeaves-days < 0 {
 		logger.Error.Println("Failed to get remaining leaves")
 		return "-1", errors.New("Your remaining leaves are less than days requested")
@@ -66,11 +73,13 @@ func (r *RedisConnection) EditLeave(l *models.Leave) (string, error) {
 	}
 	defer r.PutBackConnection(conn)
 
-	remainingLeaves, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userID).Int()
+	remainStr, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userRemainingAnnualLeaves).Str()
 	if err != nil {
 		logger.Error.Println("Failed to get remaining leaves")
 		return "-1", err
 	}
+
+	remainingLeaves, _ := strconv.Atoi(remainStr)
 
 	userName, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userName).Str()
 	if err != nil {
@@ -100,8 +109,9 @@ func (r *RedisConnection) createUpdateLeave(l *models.Leave, newLeaveID string, 
 		return "-1", err2
 	}
 
+	logger.Trace.Println(l.DepartmentID)
 	if queued, err3 := conn.Cmd("HMSET", leaveKeyPrefix+newLeaveID, leaveID, newLeaveID, leaveUserID, l.UserID, leaveDepartmentID, l.DepartmentID,
-		leaveFrom, l.From, leaveTo, l.To, leaveType, l.Type, leaveReason, l.Reason, leaveStatus, l.Status, leaveUserName, userName).Str(); strings.ToLower(queued) != queuedKeyword {
+		leaveFrom, l.From.Format("2006-Jan-01"), leaveTo, l.To.Format("2006-Jan-01"), leaveType, l.Type, leaveReason, l.Reason, leaveStatus, l.Status, leaveUserName, userName).Str(); strings.ToLower(queued) != queuedKeyword {
 		logger.Error.Println("Error Queuing command HMSET", leaveKeyPrefix+newLeaveID, leaveID, newLeaveID, leaveUserID, l.UserID, leaveDepartmentID, l.DepartmentID,
 			leaveFrom, l.From, leaveTo, l.To, leaveType, l.Type, leaveReason, l.Reason, leaveStatus, l.Status)
 		return "-1", err3
@@ -127,6 +137,8 @@ func (r *RedisConnection) createUpdateLeave(l *models.Leave, newLeaveID string, 
 	}
 
 	remainingLeaves = remainingLeaves - days
+
+	logger.Trace.Println(remainingLeaves)
 
 	_, err := conn.Cmd("HSET", userKeyPrefix+l.UserID, userRemainingAnnualLeaves, remainingLeaves).Int()
 	if err != nil {
