@@ -40,6 +40,12 @@ func (r *RedisConnection) NewLeave(l *models.Leave) (string, error) {
 		return "-1", err
 	}
 
+	userName, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userName).Str()
+	if err != nil {
+		logger.Error.Println("Failed to get remaining leaves")
+		return "-1", err
+	}
+
 	days := int((l.To.Sub(l.From) / 24).Hours()) + 1
 
 	if remainingLeaves-days < 0 {
@@ -47,7 +53,7 @@ func (r *RedisConnection) NewLeave(l *models.Leave) (string, error) {
 		return "-1", errors.New("Your remaining leaves are less than days requested")
 	}
 
-	return r.createUpdateLeave(l, newLeaveID, days, remainingLeaves, conn)
+	return r.createUpdateLeave(l, newLeaveID, days, userName, remainingLeaves, conn)
 }
 
 //EditLeave is to create a new leave, it takes a leave object, then inserts it into
@@ -66,6 +72,12 @@ func (r *RedisConnection) EditLeave(l *models.Leave) (string, error) {
 		return "-1", err
 	}
 
+	userName, err := conn.Cmd("HGET", userKeyPrefix+l.UserID, userName).Str()
+	if err != nil {
+		logger.Error.Println("Failed to get remaining leaves")
+		return "-1", err
+	}
+
 	days := int((l.To.Sub(l.From) / 24).Hours()) + 1
 
 	if remainingLeaves-days < 0 {
@@ -73,10 +85,10 @@ func (r *RedisConnection) EditLeave(l *models.Leave) (string, error) {
 		return "-1", errors.New("Your remaining leaves are less than days requested")
 	}
 
-	return r.createUpdateLeave(l, l.ID, days, remainingLeaves, conn)
+	return r.createUpdateLeave(l, l.ID, days, userName, remainingLeaves, conn)
 }
 
-func (r *RedisConnection) createUpdateLeave(l *models.Leave, newLeaveID string, days int, remainingLeaves int, conn *redis.Client) (string, error) {
+func (r *RedisConnection) createUpdateLeave(l *models.Leave, newLeaveID string, days int, userName string, remainingLeaves int, conn *redis.Client) (string, error) {
 
 	if ok, err1 := conn.Cmd("MULTI").Str(); strings.ToLower(ok) != "ok" {
 		logger.Error.Println("Cannot execute commands now")
@@ -89,7 +101,7 @@ func (r *RedisConnection) createUpdateLeave(l *models.Leave, newLeaveID string, 
 	}
 
 	if queued, err3 := conn.Cmd("HMSET", leaveKeyPrefix+newLeaveID, leaveID, newLeaveID, leaveUserID, l.UserID, leaveDepartmentID, l.DepartmentID,
-		leaveFrom, l.From, leaveTo, l.To, leaveType, l.Type, leaveReason, l.Reason, leaveStatus, l.Status).Str(); strings.ToLower(queued) != queuedKeyword {
+		leaveFrom, l.From, leaveTo, l.To, leaveType, l.Type, leaveReason, l.Reason, leaveStatus, l.Status, leaveUserName, userName).Str(); strings.ToLower(queued) != queuedKeyword {
 		logger.Error.Println("Error Queuing command HMSET", leaveKeyPrefix+newLeaveID, leaveID, newLeaveID, leaveUserID, l.UserID, leaveDepartmentID, l.DepartmentID,
 			leaveFrom, l.From, leaveTo, l.To, leaveType, l.Type, leaveReason, l.Reason, leaveStatus, l.Status)
 		return "-1", err3

@@ -17,11 +17,12 @@ import (
 )
 
 const (
-	apiBase       = "/api"
-	rootURI       = apiBase + "/"
-	leavesURI     = apiBase + "/leaves"
-	leavesIDURI   = apiBase + "/leaves/<leave_id>"
-	agazaTypesURI = apiBase + "/agazatypes"
+	apiBase        = "/api"
+	rootURI        = apiBase + "/"
+	leavesURI      = apiBase + "/leaves"
+	leavesIDURI    = apiBase + "/leaves/<leave_id>"
+	agazaTypesURI  = apiBase + "/agazatypes"
+	departmentsURI = apiBase + "/departments"
 )
 
 var (
@@ -42,6 +43,7 @@ func (f *FasthttpAPIHandler) StartAndServeAPIs() {
 	f.router.Put(leavesIDURI, f.SetHeaders, f.Logger, f.PutLeaves)
 
 	f.router.Get(agazaTypesURI, f.SetHeaders, f.Logger, f.GetAgazaTypes)
+	f.router.Get(departmentsURI, f.SetHeaders, f.Logger, f.GetDepartments)
 
 	fasthttp.ListenAndServe(":"+configuration.APIserverport, f.router.HandleRequest)
 }
@@ -59,6 +61,27 @@ func (f *FasthttpAPIHandler) GetAgazaTypes(c *routing.Context) error {
 	agaza.ID = "1"
 	agaza.Name = "annual"
 	response, _ := json.Marshal(agaza)
+	c.Write(response)
+	c.SetStatusCode(http.StatusOK)
+	return nil
+}
+
+//GetDepartments get all departments
+func (f *FasthttpAPIHandler) GetDepartments(c *routing.Context) error {
+	deps := [3]models.Department{}
+	deps[0].ID = "1"
+	deps[0].DepartmentColor = "Ninjas"
+	deps[0].DepartmentName = "#ff7441"
+
+	deps[1].ID = "1"
+	deps[1].DepartmentColor = "Mobile"
+	deps[1].DepartmentName = "#0db1bd"
+
+	deps[2].ID = "1"
+	deps[2].DepartmentColor = "zumba"
+	deps[2].DepartmentName = "#bf46bd"
+
+	response, _ := json.Marshal(deps)
 	c.Write(response)
 	c.SetStatusCode(http.StatusOK)
 	return nil
