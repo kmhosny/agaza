@@ -12,11 +12,13 @@ type DBoperationsFactory interface {
 
 	//users model
 	NewUser(*models.User) (int, error)
+	GetUserByID(string) (*models.User, error)
 	//DeleteUser(string) (int, error)
 	//UserExists(userId string) (bool, error)
 
 	//application model
-	NewLeave(*models.Leave) (int, error)
+	NewLeave(*models.Leave) (string, error)
+	EditLeave(*models.Leave) (string, error)
 	GetLeaveByID(string) (*models.Leave, error)
 	//DeleteLeave(*models.Leave) (int, error)
 	GetLeavesInRange(time.Time, time.Time) ([]*models.ExposedLeave, error)

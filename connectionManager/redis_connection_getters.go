@@ -182,3 +182,42 @@ func (r *RedisConnection) GetLeavesInRange(from time.Time, to time.Time) ([]*mod
 	}
 	return leaves, nil
 }
+
+//GetUserByID return the user of this ID
+func (r *RedisConnection) GetUserByID(ID string) (*models.User, error) {
+	conn, err := r.GetOneConnection()
+	if err != nil {
+		logger.Error.Println("Failed to retrieve a connection")
+		return nil, err
+	}
+	defer r.PutBackConnection(conn)
+
+	result, err := conn.Cmd("HGETALL", userKeyPrefix+ID).List()
+	if err != nil {
+		logger.Error.Println("Failed execute command HGETALL", userKeyPrefix+ID)
+		return nil, err
+	}
+	if len(result) == 0 {
+		logger.Error.Println(userKeyPrefix+ID, " doesn't exist")
+		return nil, errors.New(userKeyPrefix + ID + " doesn't exist")
+	}
+	userObject := new(models.User)
+	for i, value := range result {
+		switch value {
+		case userID:
+			userObject.ID = result[i+1]
+			break
+		case userDepartmentID:
+			userObject.DepartmentID = result[i+1]
+			break
+		case userName:
+			userObject.Name = result[i+1]
+			break
+		case userRemainingAnnualLeaves:
+			userObject.RemainingAnnualLeaves, _ = strconv.Atoi(result[i+1])
+			break
+		}
+
+	}
+	return userObject, nil
+}
